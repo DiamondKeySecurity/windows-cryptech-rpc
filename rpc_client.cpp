@@ -82,11 +82,18 @@ hal_error_t hal_rpc_get_version(uint32_t *version)
 	return (hal_error_t)rpc_ret;
 }
 
-/*hal_error_t get_random(void *buffer, const size_t length)
+hal_error_t hal_rpc_get_random(void *buffer, const size_t length)
 {
 	uint8_t outbuf[nargs(3)], *optr = outbuf, *olimit = outbuf + sizeof(outbuf);
-	uint8_t inbuf[nargs(4) + pad(length)];
-	const uint8_t *iptr = inbuf, *ilimit = inbuf + sizeof(inbuf);
+
+	// VS doesn't allow arrays of variable size
+	uint32_t ibuf_len = nargs(4) + pad(length);
+	uint8_t *inbuf = new uint8_t[ibuf_len];
+	const uint8_t *iptr = inbuf, *ilimit = inbuf + ibuf_len;
+
+	// use a unique_ptr to handle destruction of the data we just created
+	std::unique_ptr<uint8_t> temp(inbuf);
+
 	size_t rcvlen;
 	hal_client_handle_t dummy_client = { 0 };
 	uint32_t rpc_ret;
@@ -96,12 +103,12 @@ hal_error_t hal_rpc_get_version(uint32_t *version)
 	check(hal_xdr_encode_int(&optr, olimit, (uint32_t)length));
 	check(hal_rpc_send(outbuf, optr - outbuf));
 
-	check(read_matching_packet(RPC_FUNC_GET_RANDOM, inbuf, sizeof(inbuf), &iptr, &ilimit));
+	check(read_matching_packet(RPC_FUNC_GET_RANDOM, inbuf, ibuf_len, &iptr, &ilimit));
 
 	check(hal_xdr_decode_int(&iptr, ilimit, &rpc_ret));
 	if (rpc_ret == HAL_OK) {
-		check(hal_xdr_decode_variable_opaque(&iptr, ilimit, buffer, &rcvlen, length));
+		check(hal_xdr_decode_variable_opaque(&iptr, ilimit, (uint8_t *)buffer, &rcvlen, length));
 		// XXX check rcvlen vs length
 	}
 	return (hal_error_t)rpc_ret;
-}*/
+}
