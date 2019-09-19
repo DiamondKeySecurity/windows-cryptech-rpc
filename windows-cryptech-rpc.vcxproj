@@ -162,6 +162,8 @@
     <ClInclude Include="slip_internal.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="test-ecdsa.h" />
+    <ClInclude Include="test-rsa.h" />
     <ClInclude Include="xdr_internal.h" />
   </ItemGroup>
   <ItemGroup>
