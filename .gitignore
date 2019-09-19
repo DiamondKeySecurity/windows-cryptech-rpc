@@ -33,5 +33,5 @@
 
 # VS files to ignore
 *.user
-vs/*
+.vs/*
 Debug/*
