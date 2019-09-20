@@ -36,6 +36,8 @@
 // Copyright 2019, Diamond Key Security
 #include "stdafx.h"
 
+const hal_hash_handle_t hal_hash_handle_none = { HAL_HANDLE_NONE };
+
 #ifndef HAL_RPC_CLIENT_DEBUG
 #define HAL_RPC_CLIENT_DEBUG 1
 #endif
